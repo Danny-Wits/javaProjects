@@ -3,8 +3,8 @@ import java.io.Serializable;
 class User implements Serializable{
     private String name;
     private String password;
-
-    public User(String name, String password) {
+    private static final long serialVersionUID=1;
+    public User(String name, String password) { 
         this.name = name;
         this.password = password;
     }
@@ -28,6 +28,9 @@ class User implements Serializable{
     }
     boolean matchPassword(User u){
         return this.password.equals(u.getPassword());
+    }
+    String getDetails(){
+        return "Name : "+this.name + "  | Pass : "+ this.password;
     }
 
 }

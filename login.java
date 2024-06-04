@@ -1,4 +1,6 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -11,6 +13,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -19,10 +22,10 @@ import javax.swing.JTextField;
 
 public class login implements ActionListener {
     private JFrame window;
-    private JPanel containerH, containerC;
-    private JLabel title, nameText, passwordText;
+    private JPanel containerH, containerC,containerF;
+    private JLabel title, nameText, passwordText,details;
     private JTextField nameInput, passwordInput;
-    private JButton submit;
+    private JButton submit,clear;
     private ArrayList<User>users=new ArrayList<>();
     private final String PATH ="list";
 
@@ -37,22 +40,17 @@ public class login implements ActionListener {
         // Manager".
         window = new JFrame();
         window.setFocusable(true);
-        window.setBounds(10, 10, 1000, 600);
+        window.setBounds(10, 10, 600, 600);
         window.setLayout(new BorderLayout());
         window.setTitle("Data Manager");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // !Border Setup
-        // The code snippet you provided is creating a JPanel named `container`, adding
-        // a JLabel with the
-        // text "WELCOME" to it, setting the font of the JLabel to be a Monospace font
-        // with a size of 40,
-        // and then adding the container to the JFrame window at the BorderLayout.NORTH
-        // position.
+        //!Header
         containerH = new JPanel();
+        containerH.setBackground(Color.white);
         containerH.setVisible(true);
-        title = new JLabel("WELCOME");
-        title.setFont(new Font("Monospace", 0, 40));
+        title = new JLabel("Authentication");
+        title.setFont(new Font("DIGIFACE", 0, 28));
         containerH.add(title);
         window.add(containerH, BorderLayout.NORTH);
 
@@ -60,63 +58,96 @@ public class login implements ActionListener {
         containerC = new JPanel();
         containerC.setFocusable(true);
         containerC.setVisible(true);
-        containerC.setLayout(new GridLayout(10, 2));
+        containerC.setLayout(new GridLayout(10, 2,0,10));
 
-        // setting inputs
+        //! setting inputs
         // Name
-        nameText = new JLabel("Name:");
+        nameText = new JLabel("Name");
         containerC.add(nameText);
+        setFontDefault(nameText);
         nameInput = new JTextField();
         containerC.add(nameInput);
 
         // Password
-        passwordText = new JLabel("password:");
+        passwordText = new JLabel("Password");
+        setFontDefault(passwordText);
         containerC.add(passwordText);
         passwordInput = new JTextField();
         containerC.add(passwordInput);
 
         // setting buttons
         submit = new JButton();
-        submit.setText("Click To Submit");
+        setFontDefault(submit);
+        submit.setText("LOG IN  / SIGN IN");
         submit.addActionListener(this);
         containerC.add(submit);
-       
+        clear = new JButton();
+        setFontDefault(clear);
+        clear.setText("CLEAR");
+        clear.addActionListener(this);
+        containerC.add(clear);
+
         window.add(containerC, BorderLayout.CENTER);
+
+        //!Footer
+        containerF = new JPanel();
+        containerF.setBackground(Color.RED);
+        containerF.setVisible(true);
+        details = new JLabel("This is a secure data vault brought to you by BCA students GDC DODA");
+        setFontDefault(details);
+        containerF.add(details);
+        window.add(containerF, BorderLayout.SOUTH);
+
+        //!rendering the window
         window.setVisible(true);
-        //loading saved files
+        //!loading saved files
         load();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        User newUser=new User(nameInput.getText(), passwordInput.getText());
-        //Name Check 
-        boolean flag=false;
-        User found=null;
-        for (User u : users) {
-           if(newUser.matchName(u)){
-            show("User Found");
-            flag = true;
-            found=u;
-            break;
-           }
+        if(e.getActionCommand().equals("LOG IN  / SIGN IN")){
+            User newUser=new User(nameInput.getText(), passwordInput.getText());
+            //Name Check 
+            boolean flag=false;
+            User found=null;
+            for (User u : users) {
+               if(newUser.matchName(u)){
+                show("User Found");
+                flag = true;
+                found=u;
+                break;
+               }
+            }
+            if (flag){
+            //Password Check
+            if (newUser.matchPassword(found)) {
+                new intract(newUser.getName());
+                window.dispose();
+                return;
+            }else{
+                //password problem
+                clearInput(passwordInput);
+                show("Password does not Match!");
+             }
+            }else{
+                //new user
+                users.add(newUser);
+                save();
+                clearInput(passwordInput);
+                show("Your details have been saved");
+            }
+           
+        }else if(e.getActionCommand().equals("CLEAR")){
+            clearInput(nameInput);
+            clearInput(passwordInput);
         }
-        if (flag){
-        //Password Check
-        if (newUser.matchPassword(found)) {
-            new intract(newUser.getName());
-            window.dispose();
-            return;
-        }else{
-            show("Password does not Match!");
-         }
-        }else{
-            users.add(newUser);
-            save();
-        }
-       
+        
     }
+ 
+
+    @SuppressWarnings("unchecked")
     void load(){
          //loading Users
          File f= new File(PATH);
@@ -133,7 +164,7 @@ public class login implements ActionListener {
              ex.printStackTrace();
          }finally{
              for (User u : users) {
-                 System.out.println(u.getName());
+                 System.out.println(u.getDetails());
              }
          }
          }
@@ -153,6 +184,12 @@ public class login implements ActionListener {
         System.err.println("yy");
            ex.printStackTrace();
        }  
+    }
+    void setFontDefault(JComponent x){
+        x.setFont(new Font("DIGIFACE", 0, 16));
+    }
+    void clearInput(JTextField x) {
+        x.setText("");
     }
 
 }
