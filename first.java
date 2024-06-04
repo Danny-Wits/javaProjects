@@ -8,6 +8,7 @@ import javax.swing.plaf.FontUIResource;
 public class first {
 
      public static void main(String[] args) {
+        System.out.println("Umar chomu");
         JFrame window = new JFrame();
         window.setVisible(true);
         window.setSize(500,500);
