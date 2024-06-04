@@ -1,6 +1,5 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -22,12 +21,12 @@ import javax.swing.JTextField;
 
 public class login implements ActionListener {
     private JFrame window;
-    private JPanel containerH, containerC,containerF;
-    private JLabel title, nameText, passwordText,details;
+    private JPanel containerH, containerC, containerF;
+    private JLabel title, nameText, passwordText, details;
     private JTextField nameInput, passwordInput;
-    private JButton submit,clear;
-    private ArrayList<User>users=new ArrayList<>();
-    private final String PATH ="list";
+    private JButton submit, clear;
+    private ArrayList<User> users = new ArrayList<>();
+    private final String PATH = "list";
 
     login() {
         // !Window Setup
@@ -45,7 +44,7 @@ public class login implements ActionListener {
         window.setTitle("Data Manager");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        //!Header
+        // !Header
         containerH = new JPanel();
         containerH.setBackground(Color.white);
         containerH.setVisible(true);
@@ -58,9 +57,9 @@ public class login implements ActionListener {
         containerC = new JPanel();
         containerC.setFocusable(true);
         containerC.setVisible(true);
-        containerC.setLayout(new GridLayout(10, 2,0,10));
+        containerC.setLayout(new GridLayout(10, 2, 0, 10));
 
-        //! setting inputs
+        // ! setting inputs
         // Name
         nameText = new JLabel("Name");
         containerC.add(nameText);
@@ -89,7 +88,7 @@ public class login implements ActionListener {
 
         window.add(containerC, BorderLayout.CENTER);
 
-        //!Footer
+        // !Footer
         containerF = new JPanel();
         containerF.setBackground(Color.RED);
         containerF.setVisible(true);
@@ -98,96 +97,99 @@ public class login implements ActionListener {
         containerF.add(details);
         window.add(containerF, BorderLayout.SOUTH);
 
-        //!rendering the window
+        // !rendering the window
         window.setVisible(true);
-        //!loading saved files
+        // !loading saved files
         load();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        
-        if(e.getActionCommand().equals("LOG IN  / SIGN IN")){
-            User newUser=new User(nameInput.getText(), passwordInput.getText());
-            //Name Check 
-            boolean flag=false;
-            User found=null;
+
+        if (e.getActionCommand().equals("LOG IN  / SIGN IN")) {
+            User newUser = new User(nameInput.getText(), passwordInput.getText());
+            // Name Check
+            boolean flag = false;
+            User found = null;
             for (User u : users) {
-               if(newUser.matchName(u)){
-                show("User Found");
-                flag = true;
-                found=u;
-                break;
-               }
+                if (newUser.matchName(u)) {
+                    show("User Found");
+                    flag = true;
+                    found = u;
+                    break;
+                }
             }
-            if (flag){
-            //Password Check
-            if (newUser.matchPassword(found)) {
-                new intract(newUser.getName());
-                window.dispose();
-                return;
-            }else{
-                //password problem
-                clearInput(passwordInput);
-                show("Password does not Match!");
-             }
-            }else{
-                //new user
+            if (flag) {
+                // Password Check
+                if (newUser.matchPassword(found)) {
+                    new intract(newUser.getName());
+                    window.dispose();
+                    return;
+                } else {
+                    // password problem
+                    clearInput(passwordInput);
+                    show("Password does not Match!");
+                }
+            } else {
+                // new user
                 users.add(newUser);
                 save();
                 clearInput(passwordInput);
                 show("Your details have been saved");
             }
-           
-        }else if(e.getActionCommand().equals("CLEAR")){
+
+        } else if (e.getActionCommand().equals("CLEAR")) {
             clearInput(nameInput);
             clearInput(passwordInput);
         }
-        
+
     }
- 
 
     @SuppressWarnings("unchecked")
-    void load(){
-         //loading Users
-         File f= new File(PATH);
-         if(f.exists()){
-         //loading from storage
-         try{
-         FileInputStream fIn = new FileInputStream(PATH);
-         ObjectInputStream oIN = new ObjectInputStream(fIn);
-         users=(ArrayList<User>)oIN.readObject();
-         oIN.close();
-         fIn.close();
-         }catch(Exception ex){
-             System.err.println("x");
-             ex.printStackTrace();
-         }finally{
-             for (User u : users) {
-                 System.out.println(u.getDetails());
-             }
-         }
-         }
+    void load() {
+        // loading Users
+        File f = new File(PATH);
+        if (f.exists()) {
+            // loading from storage
+            try {
+                FileInputStream fIn = new FileInputStream(PATH);
+                ObjectInputStream oIN = new ObjectInputStream(fIn);
+                users = (ArrayList<User>) oIN.readObject();
+                oIN.close();
+                fIn.close();
+            } catch (Exception ex) {
+                System.err.println("x");
+                ex.printStackTrace();
+            } finally {
+                for (User u : users) {
+                    System.out.println(u.getDetails());
+                }
+            }
+        }
     }
-    void show(String x){
-        JOptionPane.showMessageDialog(window,x,"INFO",JOptionPane.INFORMATION_MESSAGE);
+
+    void show(String x) {
+        JOptionPane.showMessageDialog(window, x, "INFO", JOptionPane.INFORMATION_MESSAGE);
     }
-    void save(){
-       //Saving User
-       try{
-       FileOutputStream fOut = new FileOutputStream(PATH);
-       ObjectOutputStream oOut = new ObjectOutputStream(fOut);
-        oOut.writeObject(users);
-        oOut.close();
-        fOut.close();
-       }catch(Exception ex){
-        System.err.println("yy");
-           ex.printStackTrace();
-       }  
+
+    void save() {
+        // Saving User
+        try {
+            FileOutputStream fOut = new FileOutputStream(PATH);
+            ObjectOutputStream oOut = new ObjectOutputStream(fOut);
+            oOut.writeObject(users);
+            oOut.close();
+            fOut.close();
+        } catch (Exception ex) {
+            System.err.println("yy");
+            ex.printStackTrace();
+        }
     }
-    void setFontDefault(JComponent x){
+
+    void setFontDefault(JComponent x) {
         x.setFont(new Font("DIGIFACE", 0, 16));
     }
+
     void clearInput(JTextField x) {
         x.setText("");
     }
