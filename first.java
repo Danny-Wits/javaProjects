@@ -17,7 +17,9 @@ public class first {
         text.setFont(new FontUIResource("DIGIFACE", 0, 50));
         text.setBounds(10,10,400,100);
         window.add(text);
+        System.out.println("Hello nalayak");
         }
+        
 }
 // hello
 //water is good
