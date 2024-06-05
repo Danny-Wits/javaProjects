@@ -10,7 +10,6 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -75,17 +74,19 @@ public class login implements ActionListener {
         containerC.add(passwordInput);
 
         // setting buttons
+        //LOG IN
         submit = new JButton();
         setFontDefault(submit);
         submit.setText("LOG IN  / SIGN IN");
         submit.addActionListener(this);
         containerC.add(submit);
+        //Clear
         clear = new JButton();
         setFontDefault(clear);
         clear.setText("CLEAR");
         clear.addActionListener(this);
         containerC.add(clear);
-
+        
         window.add(containerC, BorderLayout.CENTER);
 
         // !Footer
